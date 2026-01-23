@@ -1,6 +1,19 @@
 # airtool
 
-Typed Airtable utilities with schema-aware helpers.
+Typed Airtable SDK helpers with schema-aware parsing, field mapping, and retry/pagination utilities.
+
+## Features
+
+- Typed table definitions with ID-to-field mapping
+- Parse and validate records with your schema library
+- Typed CRUD helpers (single + batch)
+- Field selection with required-field merging
+- Optional client wrapper with retry/backoff
+- Lightweight and ESM-first
+
+## Requirements
+
+- Node.js >= 18.18
 
 ## Install
 
@@ -49,7 +62,7 @@ const records = await fetchAllRecords(base, dealsTable, {
 console.log(records[0].fields.name);
 ```
 
-## Client wrapper
+## Client wrapper (recommended)
 
 ```ts
 import { createAirtableClient } from 'airtool';
@@ -80,12 +93,24 @@ await withAirtable('main', async ({ base }) => {
 });
 ```
 
-## Field selection
+## Field selection & required fields
 
-`pickFields` returns **typed field keys** (not IDs). This keeps code compact while still validating against the table type.
-The library resolves field IDs internally based on the table mappings.
+- `pickFields(table, ...)` returns typed keys (not IDs).
+- `requiredFields` are always included for typed list queries.
 
-## Pagination helpers
+```ts
+const fields = pickFields(dealsTable, 'status');
+// requiredFields + fields are fetched and parsed
+```
+
+## Validation modes
+
+`mapFieldsToAirtable` supports:
+- `validate: 'full'` (strict)
+- `validate: 'partial'` (default)
+- `validate: false`
+
+## Pagination
 
 ```ts
 import { forEachPage } from 'airtool';
@@ -95,18 +120,25 @@ await forEachPage(base, 'tbl123', { view: 'Grid view' }, async (records) => {
 });
 ```
 
-## Validation
+## Retry policy
 
-`mapFieldsToAirtable` supports three modes:
-- `validate: 'full'` (default when you explicitly set it)
-- `validate: 'partial'` (default when omitted)
-- `validate: false`
+Retry/backoff is enabled via the client wrapper. Defaults:
+- Exponential backoff, capped
+- Retries on 429 and 5xx errors
 
-## Build & publish
+```ts
+const client = createAirtableClient(
+  { apiKey: process.env.AIRTABLE_API_KEY!, baseId: 'app123' },
+  { retry: { maxRetries: 5, minDelayMs: 200, maxDelayMs: 3000 } },
+);
+```
+
+## Build, test, release
 
 ```sh
-pnpm build
+pnpm lint
 pnpm test
+pnpm build
 pnpm publish --access public
 ```
 

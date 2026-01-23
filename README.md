@@ -13,7 +13,7 @@ Typed Airtable SDK helpers with schema-aware parsing, field mapping, and retry/p
 
 ## Requirements
 
-- Node.js >= 22
+- Node.js >= 24
 
 ## Install
 
@@ -61,6 +61,28 @@ const records = await fetchAllRecords(base, dealsTable, {
 
 console.log(records[0].fields.name);
 ```
+
+## Using with airtypes
+
+Generate table definitions with `airtypes`, then import them directly into `airtool`:
+
+```ts
+import { createAirtableClient, pickFields } from 'airtool';
+import { dealsTable } from './airtable-types.js';
+
+const client = createAirtableClient({
+  apiKey: process.env.AIRTABLE_API_KEY!,
+  baseId: dealsTable.baseId!,
+});
+
+const deals = client.table(dealsTable);
+const records = await deals.fetchAllRecords({
+  fields: pickFields(dealsTable, 'name', 'status'),
+});
+```
+
+`airtypes` can also emit `requiredFields` per table (via `required_fields` in its config), which airtool merges into
+typed list queries automatically.
 
 ## Client wrapper (recommended)
 

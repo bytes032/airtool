@@ -13,7 +13,7 @@ Typed Airtable SDK helpers with schema-aware parsing, field mapping, and retry/p
 
 ## Requirements
 
-- Node.js >= 18.18
+- Node.js >= 22
 
 ## Install
 

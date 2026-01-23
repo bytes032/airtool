@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/bytes032/airtool#readme",
   "engines": {
-    "node": ">=18.18"
+    "node": ">=22"
   },
   "keywords": [
     "airtable",

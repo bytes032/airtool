@@ -4,27 +4,66 @@
   "description": "Typed Airtable utilities with schema-aware helpers.",
   "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "packageManager": "pnpm@9.15.0",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bytes032/airtool.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bytes032/airtool/issues"
+  },
+  "homepage": "https://github.com/bytes032/airtool#readme",
+  "engines": {
+    "node": ">=18.18"
+  },
+  "keywords": [
+    "airtable",
+    "sdk",
+    "typescript"
+  ],
   "scripts": {
     "format": "biome format --write .",
     "write": "biome check --write .",
     "check": "biome check --write .",
+    "build": "tsup",
     "lint": "biome check . && oxlint --type-aware --tsconfig tsconfig.json --config .oxlintrc.json .",
     "lint:fix": "biome check --write . && oxlint --type-aware --tsconfig tsconfig.json --config .oxlintrc.json --fix .",
-    "dev": "bun src/index.ts"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "airtable": "^0.12.2"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.7",
     "@biomejs/biome": "^2.3.11",
     "@types/node": "^25.0.10",
     "oxlint": "^1.41.0",
     "oxlint-tsgolint": "^0.11.1",
+    "tsup": "^8.5.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.1.1"
   }
 }

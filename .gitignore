@@ -1,7 +1,7 @@
 node_modules
-config.toml
-airtable-types.ts
+dist
+coverage
+.env
+.DS_Store
+pnpm-debug.log
 .vscode/*
-
-# Output
-f/types/airtable-types.ts

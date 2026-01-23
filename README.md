@@ -11,7 +11,6 @@ pnpm add airtool airtable
 ## Quick start
 
 ```ts
-import Airtable from 'airtable';
 import {
   createAirtableBase,
   fetchAllRecords,
@@ -50,6 +49,20 @@ const records = await fetchAllRecords(base, dealsTable, {
 console.log(records[0].fields.name);
 ```
 
+## Client wrapper
+
+```ts
+import { createAirtableClient } from 'airtool';
+
+const client = createAirtableClient(
+  { apiKey: process.env.AIRTABLE_API_KEY!, baseId: 'app123' },
+  { retry: { maxRetries: 3 }, logger: console },
+);
+
+const deals = client.table(dealsTable);
+const record = await deals.fetchRecord('rec123');
+```
+
 ## Config providers (optional)
 
 ```ts
@@ -72,12 +85,30 @@ await withAirtable('main', async ({ base }) => {
 `pickFields` returns **typed field keys** (not IDs). This keeps code compact while still validating against the table type.
 The library resolves field IDs internally based on the table mappings.
 
+## Pagination helpers
+
+```ts
+import { forEachPage } from 'airtool';
+
+await forEachPage(base, 'tbl123', { view: 'Grid view' }, async (records) => {
+  // process one page at a time
+});
+```
+
 ## Validation
 
 `mapFieldsToAirtable` supports three modes:
 - `validate: 'full'` (default when you explicitly set it)
 - `validate: 'partial'` (default when omitted)
 - `validate: false`
+
+## Build & publish
+
+```sh
+pnpm build
+pnpm test
+pnpm publish --access public
+```
 
 ## License
 

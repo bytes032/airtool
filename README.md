@@ -132,6 +132,15 @@ const fields = pickFields(dealsTable, 'status');
 - `validate: 'partial'` (default)
 - `validate: false`
 
+## Typecast writes
+
+Set `typecast: true` when you want Airtable to create missing select or multiselect options during writes (requires
+creator permissions on the base).
+
+```ts
+await updateRecord(base, dealsTable, recordId, { status: 'New Option' }, { typecast: true });
+```
+
 ## Pagination
 
 ```ts

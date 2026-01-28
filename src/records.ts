@@ -210,6 +210,7 @@ export async function updateRecord(
   tableId: string,
   recordId: string,
   fields: AirtableFieldSet,
+  options?: AirtableWriteOptions,
 ): Promise<AirtableRecord>;
 export async function updateRecord(
   base: AirtableBase,
@@ -223,7 +224,8 @@ export async function updateRecord(
     typeof tableOrId === 'string'
       ? (fields as AirtableFieldSet)
       : mapFieldsToAirtable(tableOrId, fields as Partial<Record<string, unknown>>, options);
-  const updatedRecord = await base(tableId).update(recordId, mappedFields);
+  const writeOptions = options?.typecast ? { typecast: true } : undefined;
+  const updatedRecord = await base(tableId).update(recordId, mappedFields, writeOptions);
 
   if (typeof tableOrId === 'string') {
     return updatedRecord;
@@ -242,6 +244,7 @@ export async function updateRecordsBatch(
   base: AirtableBase,
   tableId: string,
   updates: Array<{ id: string; fields: AirtableFieldSet }>,
+  options?: AirtableWriteOptions,
 ): Promise<AirtableRecord[]>;
 export async function updateRecordsBatch(
   base: AirtableBase,
@@ -271,7 +274,8 @@ export async function updateRecordsBatch(
       id: update.id,
       fields: update.fields,
     }));
-    const updatedRecords = await base(tableId).update(recordsToUpdate);
+    const writeOptions = options?.typecast ? { typecast: true } : undefined;
+    const updatedRecords = await base(tableId).update(recordsToUpdate, writeOptions);
     results.push(...updatedRecords);
   }
 
@@ -334,6 +338,7 @@ export async function createRecord(
   base: AirtableBase,
   tableId: string,
   fields: AirtableFieldSet,
+  options?: AirtableWriteOptions,
 ): Promise<AirtableRecord>;
 export async function createRecord(
   base: AirtableBase,
@@ -346,7 +351,8 @@ export async function createRecord(
     typeof tableOrId === 'string'
       ? (fields as AirtableFieldSet)
       : mapFieldsToAirtable(tableOrId, fields as Partial<Record<string, unknown>>, options);
-  const createdRecord = await base(tableId).create(mappedFields);
+  const writeOptions = options?.typecast ? { typecast: true } : undefined;
+  const createdRecord = await base(tableId).create(mappedFields, writeOptions);
 
   if (typeof tableOrId === 'string') {
     return createdRecord;
@@ -365,6 +371,7 @@ export async function createRecords(
   base: AirtableBase,
   tableId: string,
   recordsData: AirtableFieldSet[],
+  options?: AirtableWriteOptions,
 ): Promise<AirtableRecord[]>;
 export async function createRecords(
   base: AirtableBase,
@@ -385,7 +392,8 @@ export async function createRecords(
 
   for (let i = 0; i < mappedRecords.length; i += batchSize) {
     const batch = mappedRecords.slice(i, i + batchSize);
-    const createdBatch = await base(tableId).create(batch);
+    const writeOptions = options?.typecast ? { typecast: true } : undefined;
+    const createdBatch = await base(tableId).create(batch, writeOptions);
     results.push(...createdBatch);
   }
 

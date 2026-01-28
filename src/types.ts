@@ -44,6 +44,7 @@ export type AirtableConfigProvider<K extends string = string> = () =>
 
 export type AirtableWriteOptions = {
   validate?: 'full' | 'partial' | false;
+  typecast?: boolean;
 };
 
 export type AirtableJsonParseOptions = {

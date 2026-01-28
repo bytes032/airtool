@@ -1,6 +1,6 @@
 {
   "name": "airtool",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Typed Airtable utilities with schema-aware helpers.",
   "license": "MIT",
   "type": "module",
